@@ -1,5 +1,6 @@
 package com.fetch.reciept_processor.controller;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,9 +37,37 @@ public class ReceiptController {
 	}
 
 	@PostMapping("/process")
-	public ProcessReceiptResponse saveTheProcess(@RequestBody ReceiptRequest request) {
+	public ResponseEntity<Object> saveTheProcess(@RequestBody ReceiptRequest request) {
+
+		if (!validateReceipt(request)) {
+			return new ResponseEntity<Object>(new ErrorResponse("The Reciept is invalid"), HttpStatus.BAD_REQUEST);
+		}
+
 		String id = processingService.addReceipt(request);
-		return new ProcessReceiptResponse(id);
+		return new ResponseEntity<Object>(new ProcessReceiptResponse(id), HttpStatus.OK);
+	}
+
+	private boolean validateReceipt(ReceiptRequest request) {
+		if (request == null) {
+			return false;
+		}
+		if (StringUtils.isEmpty(request.getRetailer())) {
+			return false;
+		}
+		if (StringUtils.isEmpty(request.getPurchaseDate())) {
+			return false;
+		}
+		if (StringUtils.isEmpty(request.getPurchaseTime())) {
+			return false;
+		}
+		if (StringUtils.isEmpty(request.getTotal())) {
+			return false;
+		}
+		if (request.getItems() == null || request.getItems().size() == 0) {
+			return false;
+		}
+
+		return true;
 	}
 
 }

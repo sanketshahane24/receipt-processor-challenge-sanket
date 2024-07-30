@@ -17,7 +17,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
 import com.fetch.reciept_processor.model.ItemRequest;
-import com.fetch.reciept_processor.model.ProcessReceiptResponse;
 import com.fetch.reciept_processor.model.ReceiptRequest;
 import com.fetch.reciept_processor.service.ReceiptProcessingService;
 
@@ -37,7 +36,7 @@ public class ReceiptControllerTest {
 	
 	@Test
 	public void saveTheProcess() {
-		ProcessReceiptResponse id=controller.saveTheProcess(createRequest1());
+		var id=controller.saveTheProcess(createRequest1());
 		assertNotNull(id);
 	}
 	
